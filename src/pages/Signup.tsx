@@ -5,7 +5,6 @@ import { signupSchema, type SignupFormData } from '../utils/validation';
 import { supabase } from '../lib/supabase';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
@@ -55,8 +54,8 @@ export default function Signup() {
         if (profileError) {
           setError(profileError.message);
         } else {
-          navigate('/login', { 
-            state: { message: 'Account created successfully! Please check your email to verify your account.' } 
+          navigate('/login', {
+            state: { message: 'Account created successfully! Please check your email to verify your account.' }
           });
         }
       }
