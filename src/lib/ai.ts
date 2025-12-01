@@ -25,11 +25,11 @@ function isValidReport(data: any): data is AIReport {
     );
 }
 
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+
 export async function generateReport(code: string, language: string): Promise<AIReport> {
     try {
-        const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
-
         const generationConfig = {
             temperature: 0.3,
             topK: 1,

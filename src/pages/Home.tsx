@@ -4,9 +4,9 @@ import { ArrowRight } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <header className="flex items-center justify-between p-4 border-b bg-white">
-        <h1 className="text-2xl font-bold text-gray-800">CodeSmart</h1>
+    <div className="flex flex-col min-h-screen bg-background">
+      <header className="flex items-center justify-between p-4 border-b bg-background">
+        <h1 className="text-2xl font-bold text-foreground">CodeSmart</h1>
         <div className="space-x-4">
           <Link to="/login">
             <Button variant="outline">Login</Button>
@@ -20,7 +20,7 @@ export default function Home() {
         <h2 className="text-5xl font-extrabold md:text-6xl tracking-tight">
           Get Instant Feedback on Your Code
         </h2>
-        <p className="mt-6 text-lg text-gray-600 md:text-xl max-w-3xl">
+        <p className="mt-6 text-lg text-muted-foreground md:text-xl max-w-3xl">
           CodeSmart uses AI to analyze your code and provide you with a
           detailed report on its quality, with a score, strengths, and areas for improvement. 
           Stop guessing, start improving.
@@ -33,7 +33,7 @@ export default function Home() {
           </Link>
         </div>
       </main>
-      <footer className="p-4 border-t bg-white text-center text-sm text-gray-500">
+      <footer className="p-4 border-t bg-background text-center text-sm text-muted-foreground">
         © {new Date().getFullYear()} CodeSmart. All rights reserved.
       </footer>
     </div>

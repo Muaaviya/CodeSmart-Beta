@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 declare const Razorpay: any;
@@ -48,6 +49,25 @@ const plans = [
 export default function Paywall() {
   const navigate = useNavigate();
   const { taskId } = useParams();
+
+  // Fetch user's profile to check for admin status
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+
+      // Assuming is_admin is available directly on the user object or via user_metadata/app_metadata
+      // You might need to adjust this based on how you store admin status in Supabase auth.users table
+      if (user.user_metadata?.is_admin || user.app_metadata?.is_admin) {
+        navigate(`/view-result/${taskId}`);
+        return;
+      }
+    };
+    checkAdminStatus();
+  }, [navigate, taskId]);
 
   const handleChoosePlan = async (plan: typeof plans[0]) => {
     if (plan.name === "Free") return;
@@ -101,29 +121,29 @@ export default function Paywall() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen">
       <main className="flex-1 p-4 md:p-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => (
             <Card
               key={plan.name}
-              className={`flex flex-col ${plan.popular ? 'border-purple-500 border-2' : ''}`}
+              className={`flex flex-col ${plan.popular ? 'border-purple-500 dark:border-purple-400 border-2' : ''}`}
             >
               {plan.popular && (
-                <div className="text-sm font-bold text-center text-white bg-purple-500 p-1 rounded-t-lg">
+                <div className="text-sm font-bold text-center text-primary-foreground bg-purple-500 dark:bg-purple-400 p-1 rounded-t-lg">
                   Most Popular
                 </div>
               )}
               <CardHeader>
-                <CardTitle className="text-2xl font-bold text-gray-800">{plan.name}</CardTitle>
-                <p className="text-4xl font-bold text-gray-900">{plan.price}</p>
+                <CardTitle className="text-2xl font-bold text-foreground">{plan.name}</CardTitle>
+                <p className="text-4xl font-bold text-foreground">{plan.price}</p>
               </CardHeader>
               <CardContent className="flex-1">
                 <ul className="space-y-4">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-center">
                       <svg
-                        className="w-5 h-5 mr-3 text-green-500"
+                        className="w-5 h-5 mr-3 text-green-500 dark:text-green-400"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -136,14 +156,14 @@ export default function Paywall() {
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      <span className="text-gray-600">{feature}</span>
+                      <span className="text-muted-foreground">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
               <CardFooter>
                 <Button
-                  className={`w-full text-lg py-3 ${plan.popular ? 'bg-purple-500 hover:bg-purple-600' : 'bg-blue-500 hover:bg-blue-600'}`}
+                  className={`w-full text-lg py-3 ${plan.popular ? 'bg-purple-500 dark:bg-purple-400 hover:bg-purple-600 dark:hover:bg-purple-500' : 'bg-primary hover:bg-primary/90'}`}
                   disabled={plan.disabled}
                   onClick={() => handleChoosePlan(plan)}
                 >

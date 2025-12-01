@@ -21,11 +21,11 @@ export default function Layout({ children, title }: { children: React.ReactNode,
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="flex items-center justify-between p-4 border-b bg-white dark:bg-gray-800">
+      <header className="flex items-center justify-between p-4 border-b bg-background">
         <Link to="/dashboard">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">CodeFast</h1>
+          <h1 className="text-2xl font-bold text-foreground">CodeFast</h1>
         </Link>
-        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">{title}</h2>
+        <h2 className="text-xl font-semibold text-muted-foreground">{title}</h2>
         <div className="flex items-center space-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -35,7 +35,7 @@ export default function Layout({ children, title }: { children: React.ReactNode,
                 <span className="sr-only">Toggle theme</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="bg-background">
               <DropdownMenuItem onClick={() => setTheme("light")}>
                 Light
               </DropdownMenuItem>
@@ -53,7 +53,7 @@ export default function Layout({ children, title }: { children: React.ReactNode,
           </Button>
         </div>
       </header>
-      <main className="flex-1 bg-gray-50 dark:bg-gray-900">{children}</main>
+      <main className="flex-1 bg-muted">{children}</main>
     </div>
   );
 }

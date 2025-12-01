@@ -60,12 +60,12 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen">
       <main className="flex-1 p-4 md:p-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-800">Welcome, {user?.user_metadata.username || user?.email || 'User'}!</h2>
-            <p className="text-gray-600">Here's a summary of your recent activity.</p>
+            <h2 className="text-3xl font-bold text-foreground">Welcome, {user?.user_metadata.username || user?.email || 'User'}!</h2>
+            <p className="text-muted-foreground">Here's a summary of your recent activity.</p>
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="outline" onClick={handleAddTask}>
@@ -84,7 +84,7 @@ export default function Dashboard() {
                 </CardDescription>
               </div>
               {selectedTasks.length > 0 && (
-                <Button variant="destructive" onClick={handleDeleteSelected} className="bg-red-700 hover:bg-red-800">
+                <Button variant="destructive" onClick={handleDeleteSelected} className="bg-destructive hover:bg-destructive/90">
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete Selected ({selectedTasks.length})
                 </Button>
@@ -114,7 +114,7 @@ export default function Dashboard() {
                       }
                     }
                     return (
-                      <TableRow key={task.id} className="hover:bg-gray-100">
+                      <TableRow key={task.id} className="hover:bg-muted">
                         <TableCell>
                           <Checkbox
                             checked={selectedTasks.includes(task.id)}
@@ -127,9 +127,9 @@ export default function Dashboard() {
                         <TableCell>
                           <span
                             className={`px-2 py-1 text-sm font-semibold rounded-full ${
-                              parseInt(score) > 80 ? 'bg-green-100 text-green-800' :
-                              parseInt(score) > 60 ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-red-100 text-red-800'
+                              parseInt(score) > 80 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                              parseInt(score) > 60 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                              'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                             }`}
                           >
                             {score}

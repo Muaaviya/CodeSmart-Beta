@@ -99,7 +99,7 @@ export default function SubmitTask() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50">
+        <div className="flex flex-col min-h-screen">
             <main className="flex-1 p-4 md:p-8 flex items-center justify-center">
                 <Card className="w-full max-w-2xl">
                     <CardHeader>
@@ -154,11 +154,11 @@ export default function SubmitTask() {
                                     placeholder="Paste your coding task here..."
                                     value={code}
                                     onChange={(e) => setCode(e.target.value)}
-                                    className="font-mono bg-gray-100"
+                                    className="font-mono bg-muted"
                                 />
                             </div>
                             {error && (
-                                <div className="text-red-600 bg-red-100 p-3 rounded-md border border-red-200">
+                                <div className="text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 p-3 rounded-md border border-red-200 dark:border-red-800">
                                     {error}
                                 </div>
                             )}
