@@ -43,21 +43,9 @@ export default function Signup() {
       }
 
       if (authData.user) {
-        const { error: profileError } = await supabase.from('profiles').insert([
-          {
-            id: authData.user.id,
-            username: data.username,
-            subscription_status: 'inactive',
-          },
-        ]);
-
-        if (profileError) {
-          setError(profileError.message);
-        } else {
-          navigate('/login', {
-            state: { message: 'Account created successfully! Please check your email to verify your account.' }
-          });
-        }
+        navigate('/login', {
+          state: { message: 'Account created successfully! Please check your email to verify your account.' }
+        });
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');
