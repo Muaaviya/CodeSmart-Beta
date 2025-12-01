@@ -1,10 +1,15 @@
-//@ts-nocheck
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { Loader2, AlertTriangle, CheckCircle, ArrowRight, Lock } from "lucide-react";
+
+function normalizeList(value: string | string[]) {
+  if (Array.isArray(value)) return value;
+  return value.split(".").filter((v) => v.trim());
+}
 
 const ViewResult = () => {
   const { taskId } = useParams();
@@ -32,12 +37,8 @@ const ViewResult = () => {
         if (taskError) throw taskError;
 
         if (taskData) {
-          if (typeof taskData.ai_result === 'string') {
-            try {
-              setTask(JSON.parse(taskData.ai_result));
-            } catch (e) {
-              setError("Failed to parse AI result.");
-            }
+          if (typeof taskData.ai_result === "string") {
+            setTask(JSON.parse(taskData.ai_result));
           } else {
             setTask(taskData.ai_result);
           }
@@ -48,14 +49,14 @@ const ViewResult = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           const { data: profileData, error: profileError } = await supabase
-            .from('profiles')
-            .select('subscription_status')
-            .eq('id', user.id);
+            .from("profiles")
+            .select("subscription_status")
+            .eq("id", user.id);
 
           if (profileError) throw profileError;
 
           if (profileData && profileData.length > 0) {
-            setIsSubscribed(profileData[0].subscription_status === 'active');
+            setIsSubscribed(profileData[0].subscription_status === "active");
           }
         }
       } catch (error: any) {
@@ -79,12 +80,13 @@ const ViewResult = () => {
             </CardHeader>
             <CardContent>
               <ul className="list-disc list-inside space-y-2">
-                {task.strengths.split('.').filter(s => s.trim()).slice(0, 1).map((strength, index) => (
-                  <li key={index}>{strength.trim()}</li>
+                {normalizeList(task.strengths).slice(0, 1).map((item, i) => (
+                  <li key={i}>{item}</li>
                 ))}
               </ul>
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader className="flex flex-row items-center space-x-2">
               <AlertTriangle className="text-yellow-500" />
@@ -92,28 +94,29 @@ const ViewResult = () => {
             </CardHeader>
             <CardContent>
               <ul className="list-disc list-inside space-y-2">
-                {task.improvements.split('.').filter(s => s.trim()).slice(0, 1).map((improvement, index) => (
-                  <li key={index}>{improvement.trim()}</li>
+                {normalizeList(task.improvements).slice(0, 1).map((item, i) => (
+                  <li key={i}>{item}</li>
                 ))}
               </ul>
             </CardContent>
           </Card>
         </div>
+
         <div className="mt-6">
           <Card>
             <CardHeader>
               <CardTitle>Professional Verdict</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>{task.verdict.substring(0, 50)}...</p>
+              <p>{task.verdict.substring(0, 60)}...</p>
             </CardContent>
           </Card>
         </div>
       </div>
-      <div className="absolute inset-0 flex items-center justify-center bg-background/80 flex-col space-y-4">
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 space-y-4">
         <Lock className="w-16 h-16 text-gray-400" />
         <h3 className="text-2xl font-bold">Unlock the Full Report</h3>
-        <p className="text-gray-600">Subscribe to a plan to get access to the complete evaluation.</p>
         <Button size="lg" onClick={() => navigate(`/paywall/${taskId}`)}>
           Upgrade Now <ArrowRight className="ml-2" />
         </Button>
@@ -131,12 +134,13 @@ const ViewResult = () => {
           </CardHeader>
           <CardContent>
             <ul className="list-disc list-inside space-y-2">
-              {task.strengths.split('.').filter(s => s.trim()).map((strength, index) => (
-                <li key={index}>{strength.trim()}</li>
+              {normalizeList(task.strengths).map((item, i) => (
+                <li key={i}>{item}</li>
               ))}
             </ul>
           </CardContent>
         </Card>
+
         <Card className="border-yellow-200">
           <CardHeader className="flex flex-row items-center space-x-2">
             <AlertTriangle className="text-yellow-500" />
@@ -144,13 +148,14 @@ const ViewResult = () => {
           </CardHeader>
           <CardContent>
             <ul className="list-disc list-inside space-y-2">
-              {task.improvements.split('.').filter(s => s.trim()).map((improvement, index) => (
-                <li key={index}>{improvement.trim()}</li>
+              {normalizeList(task.improvements).map((item, i) => (
+                <li key={i}>{item}</li>
               ))}
             </ul>
           </CardContent>
         </Card>
       </div>
+
       <div className="mt-6">
         <Card>
           <CardHeader>
@@ -165,34 +170,24 @@ const ViewResult = () => {
   );
 
   if (loading) {
-    return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <main className="flex-1 p-4 md:p-8 flex items-center justify-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-500" />
-        </main>
-      </div>
+    return (<div className="flex items-center justify-center min-h-screen">
+      <Loader2 className="animate-spin w-10 h-10 text-blue-500" />
+    </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <main className="flex-1 p-4 md:p-8 flex items-center justify-center text-center">
-          <div>
-            <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-500 text-xl">{error}</p>
-          </div>
-        </main>
+      <div className="flex items-center justify-center min-h-screen text-red-500">
+        {error}
       </div>
     );
   }
 
   if (!task) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <main className="flex-1 p-4 md:p-8 flex items-center justify-center">
-          <p>No data available for this task.</p>
-        </main>
+      <div className="flex items-center justify-center min-h-screen">
+        Loading task data...
       </div>
     );
   }
@@ -201,17 +196,14 @@ const ViewResult = () => {
     <div className="flex flex-col min-h-screen bg-gray-50">
       <main className="flex-1 p-4 md:p-8 flex items-center justify-center">
         <Card className="w-full max-w-4xl">
-          <CardContent className="space-y-6 pt-6">
-            <div className="text-center">
-              <p className="text-lg font-semibold">Overall Score</p>
-              <p className="text-6xl font-bold text-blue-600">{task.score}</p>
-            </div>
+          <CardContent className="space-y-6 pt-6 text-center">
+            <p className="text-lg font-semibold">Overall Score</p>
+            <p className="text-6xl font-bold text-blue-600">{task.score}</p>
             {isSubscribed ? renderFullReport() : renderPartialReport()}
           </CardContent>
         </Card>
       </main>
-    </div>
-  );
+    </div>)
 };
 
 export default ViewResult;
