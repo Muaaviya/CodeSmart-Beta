@@ -22,7 +22,7 @@ export default function Home() {
         </h2>
         <p className="mt-6 text-lg text-muted-foreground md:text-xl max-w-3xl">
           CodeSmart uses AI to analyze your code and provide you with a
-          detailed report on its quality, with a score, strengths, and areas for improvement. 
+          detailed report on its quality, with a score, strengths, and areas for improvement.
           Stop guessing, start improving.
         </p>
         <div className="mt-10">
